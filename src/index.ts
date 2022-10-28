@@ -3,10 +3,16 @@ import Particle from "./classes/particle";
 import ParticleManager from "./classes/particlemanager";
 
 export const sketch = (p: p5) => {
+	const colorChanger = document.getElementById("Color") as HTMLInputElement;
+	let color = colorChanger.value;
+	colorChanger.addEventListener("input", () => {
+		color = colorChanger.value;
+		activeManager = new ParticleManager(p, 5, p.color(color));
+	});
 	const releasedPtManagers: ParticleManager[] = [];
-	let activeManager = new ParticleManager(p, 5, p.color("#000"));
+	let activeManager = new ParticleManager(p, 5, p.color(color));
 	p.setup = () => {
-		p.createCanvas(500, 500);
+		p.createCanvas(window.innerWidth, window.innerHeight);
 	};
 	p.draw = () => {
 		p.background("#FFF");
@@ -18,7 +24,10 @@ export const sketch = (p: p5) => {
 	};
 	p.mouseReleased = () => {
 		releasedPtManagers.push(activeManager);
-		activeManager = new ParticleManager(p, 5, p.color("#000"));
+		activeManager = new ParticleManager(p, 5, p.color(color));
+	};
+	p.windowResized = () => {
+		p.resizeCanvas(window.innerWidth, window.innerHeight);
 	};
 };
 
